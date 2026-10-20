@@ -89,7 +89,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: build/web
+          path: flutter_quest/build/web
 
       - name: Deploy to GitHub Pages
         id: deployment
