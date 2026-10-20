@@ -25,6 +25,9 @@ jobs:
       - name: Debug - list flutter-quest/flutter_quest
         run: ls -la flutter-quest/flutter_quest/
 
+      - name: Debug - check pubspec.yaml
+        run: ls -la flutter-quest/flutter_quest/pubspec.yaml
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
