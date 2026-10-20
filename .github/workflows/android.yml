@@ -11,7 +11,9 @@ jobs:
     name: Build Release APK
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    working-directory: flutter-quest/flutter_quest
+    defaults:
+      run:
+        working-directory: flutter-quest/flutter_quest
 
     steps:
       - name: Checkout
@@ -43,12 +45,12 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: flutter-quest/flutter_quest/build/app/outputs/flutter-apk/app-release.apk
           retention-days: 30
 
       - name: Upload APK (all ABIs)
         uses: actions/upload-artifact@v4
         with:
           name: app-release-split
-          path: build/app/outputs/flutter-apk/
+          path: flutter-quest/flutter_quest/build/app/outputs/flutter-apk/
           retention-days: 30
