@@ -9,6 +9,7 @@ import 'models/user.dart';
 import 'providers/auth_provider.dart';
 import 'screens/login_screen.dart';
 import 'screens/register_screen.dart';
+import 'screens/lesson_screen.dart';
 
 void main() {
   runApp(const FlutterQuestApp());
@@ -35,6 +36,7 @@ class FlutterQuestApp extends StatelessWidget {
           '/login': (_) => const LoginScreen(),
           '/register': (_) => const RegisterScreen(),
           '/home': (_) => const HomeScreen(),
+          '/lesson': (_) => const LessonScreen(lessonIndex: 0),
         },
       ),
     );
