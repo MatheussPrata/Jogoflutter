@@ -30,13 +30,16 @@ jobs:
         with:
           flutter-version: '3.47.7'
           channel: 'stable'
-          cache: true
+          cache: false
 
       - name: Get Dependencies
         run: flutter pub get
 
+      - name: Analyze Dart code
+        run: flutter analyze
+
       - name: Build APK
-        run: flutter build apk --release
+        run: flutter build apk --release --verbose
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
