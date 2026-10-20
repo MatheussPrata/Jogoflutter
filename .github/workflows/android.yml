@@ -11,9 +11,6 @@ jobs:
     name: Build Release APK
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    defaults:
-      run:
-        working-directory: flutter-quest/flutter_quest
 
     steps:
       - name: Checkout
@@ -33,13 +30,19 @@ jobs:
           cache: true
 
       - name: Get dependencies
-        run: flutter pub get
+        run: |
+          cd flutter-quest/flutter_quest
+          flutter pub get
 
       - name: Run tests
-        run: flutter test
+        run: |
+          cd flutter-quest/flutter_quest
+          flutter test
 
       - name: Build Release APK
-        run: flutter build apk --release
+        run: |
+          cd flutter-quest/flutter_quest
+          flutter build apk --release
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
