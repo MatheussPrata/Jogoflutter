@@ -369,7 +369,7 @@ class _LessonScreenState extends State<LessonScreen> {
                       children: _chosenOrder.asMap().entries.map((entry) {
                         final idx = entry.key;
                         final blockId = entry.value;
-                        final block = _shuffledBlocks.firstWhere((b) => b.id == blockId);
+                        final block = _shuffledBlocks.firstWhere((b) => b.id == blockId, orElse: () => CodeBlock('', ''));
                         return Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
