@@ -11,6 +11,9 @@ jobs:
     name: Build Release APK
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: ./flutter_quest
 
     steps:
       - name: Checkout
@@ -29,26 +32,24 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Setup, Get Dependencies and Build APK
-        run: |
-          PROJECT_PATH=$(dirname $(find . -name "pubspec.yaml" | head -n 1))
-          echo "O pubspec.yaml foi encontrado na pasta: $PROJECT_PATH"
-          cd "$PROJECT_PATH"
-          flutter pub get
-          flutter build apk --release
+      - name: Get Dependencies
+        run: flutter pub get
+
+      - name: Build APK
+        run: flutter build apk --release
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: flutter_quest/build/app/outputs/flutter-apk/app-release.apk
+          path: build/app/outputs/flutter-apk/app-release.apk
           retention-days: 30
 
       - name: Upload APK (all ABIs)
         uses: actions/upload-artifact@v4
         with:
           name: app-release-split
-          path: flutter_quest/build/app/outputs/flutter-apk/
+          path: build/app/outputs/flutter-apk/
           retention-days: 30
 
   deploy-web:
@@ -59,7 +60,11 @@ jobs:
     permissions:
       contents: read
       pages: write
-      id-token: ***
+      id-token: write
+
+    defaults:
+      run:
+        working-directory: ./flutter_quest
 
     steps:
       - name: Checkout
@@ -72,13 +77,11 @@ jobs:
           channel: 'stable'
           cache: true
 
+      - name: Get Dependencies
+        run: flutter pub get
+
       - name: Build Web
-        run: |
-          PROJECT_PATH=$(dirname $(find . -name "pubspec.yaml" | head -n 1))
-          echo "O pubspec.yaml foi encontrado na pasta: $PROJECT_PATH"
-          cd "$PROJECT_PATH"
-          flutter pub get
-          flutter build web --release --base-href="/Jogoflutter/" --no-tree-shake-icons
+        run: flutter build web --release --base-href="/Jogoflutter/"
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -86,7 +89,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: flutter_quest/build/web
+          path: build/web
 
       - name: Deploy to GitHub Pages
         id: deployment
