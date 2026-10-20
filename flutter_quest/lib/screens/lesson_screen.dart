@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 
 import '../content/exercise.dart';
 import '../content/lessons.dart';
-import '../engine/logic.dart';
 import '../providers/auth_provider.dart';
 
 class LessonScreen extends StatefulWidget {
@@ -96,19 +95,14 @@ class _LessonScreenState extends State<LessonScreen> {
   }
 
   Future<void> _awardXp() async {
-    final authProvider = context.read<AuthProvider>();
-    if (authProvider.currentUser != null) {
-      // Note: In a real app, you'd update the user's XP in AuthProvider
-      // For now, just show a snackbar
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('+10 XP! Total: ${authProvider.currentUser!.xp + 10} XP'),
-            backgroundColor: const Color(0xFF6750A4),
-            duration: const Duration(seconds: 2),
-          ),
-        );
-      }
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('+10 XP!'),
+          backgroundColor: Color(0xFF6750A4),
+          duration: Duration(seconds: 2),
+        ),
+      );
     }
   }
 
@@ -277,7 +271,7 @@ class _LessonScreenState extends State<LessonScreen> {
               label: Text(option, style: const TextStyle(fontFamily: 'monospace')),
               selected: isSelected,
               onSelected: (_) => setState(() => _chosenOption = idx),
-              selectedColor: const Color(0xFF6750A4).withOpacity(0.2),
+              selectedColor: const Color(0xFF6750A4).withValues(alpha: 0.2),
               checkmarkColor: const Color(0xFF6750A4),
               labelStyle: TextStyle(
                 color: isSelected ? const Color(0xFF6750A4) : Colors.black,
@@ -305,14 +299,12 @@ class _LessonScreenState extends State<LessonScreen> {
         Wrap(
           spacing: 8,
           runSpacing: 8,
-          children: _shuffledBlocks.asMap().entries.map((entry) {
-            final idx = entry.key;
-            final block = entry.value;
+          children: _shuffledBlocks.map((block) {
             final isUsed = _chosenOrder.contains(block.id);
             return Draggable<CodeBlock>(
               data: block,
               feedback: Material(
-                color: isUsed ? Colors.grey[300] : const Color(0xFF6750A4).withOpacity(0.1),
+                color: isUsed ? Colors.grey[300] : const Color(0xFF6750A4).withValues(alpha: 0.1),
                 elevation: 4,
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -341,7 +333,7 @@ class _LessonScreenState extends State<LessonScreen> {
             return Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: candidateData.isNotEmpty ? const Color(0xFF6750A4).withOpacity(0.1) : Colors.grey[100],
+                color: candidateData.isNotEmpty ? const Color(0xFF6750A4).withValues(alpha: 0.1) : Colors.grey[100],
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                   color: candidateData.isNotEmpty ? const Color(0xFF6750A4) : Colors.grey[300]!,
@@ -373,7 +365,7 @@ class _LessonScreenState extends State<LessonScreen> {
                         return Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF6750A4).withOpacity(0.1),
+                            color: const Color(0xFF6750A4).withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Row(
@@ -411,7 +403,7 @@ class _LessonScreenState extends State<LessonScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: isUsed ? Colors.grey[200] : const Color(0xFF6750A4).withOpacity(0.1),
+        color: isUsed ? Colors.grey[200] : const Color(0xFF6750A4).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: isUsed ? Colors.grey[400]! : const Color(0xFF6750A4),

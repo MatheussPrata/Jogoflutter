@@ -1,11 +1,7 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'content/exercise.dart';
 import 'content/lessons.dart';
-import 'models/user.dart';
 import 'providers/auth_provider.dart';
 import 'screens/login_screen.dart';
 import 'screens/register_screen.dart';
@@ -323,9 +319,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ..._buildAchievements(),
               ],
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 
@@ -407,8 +403,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 8),
                 Chip(
-                  label: Text('Membro desde ${user?.createdAt.toString().split(' ')[0] ?? '2024'}'),
-                  backgroundColor: const Color(0xFF6750A4).withOpacity(0.1),
+                  label: Text('Membro desde ${user!.createdAt.toString().split(' ')[0] ?? '2024'}'),
+                  backgroundColor: const Color(0xFF6750A4).withValues(alpha: 0.1),
                   side: BorderSide.none,
                 ),
                 const SizedBox(height: 32),
@@ -466,9 +462,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }
