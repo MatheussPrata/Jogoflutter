@@ -31,14 +31,9 @@ jobs:
 
       - name: Setup, Get Dependencies and Build APK
         run: |
-          # 1. Encontra o diretório exato que contém o pubspec.yaml
           PROJECT_PATH=$(dirname $(find . -name "pubspec.yaml" | head -n 1))
           echo "O pubspec.yaml foi encontrado na pasta: $PROJECT_PATH"
-          
-          # 2. Entra no diretório
           cd "$PROJECT_PATH"
-          
-          # 3. Baixa as dependências e faz o build
           flutter pub get
           flutter build apk --release
 
@@ -64,7 +59,7 @@ jobs:
     permissions:
       contents: read
       pages: write
-      id-token: write
+      id-token: ***
 
     steps:
       - name: Checkout
@@ -83,7 +78,7 @@ jobs:
           echo "O pubspec.yaml foi encontrado na pasta: $PROJECT_PATH"
           cd "$PROJECT_PATH"
           flutter pub get
-          flutter build web --release
+          flutter build web --release --base-href="/Jogoflutter/" --no-tree-shake-icons
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
