@@ -22,6 +22,9 @@ jobs:
       - name: Debug - list flutter-quest
         run: ls -la flutter-quest/
 
+      - name: Debug - list flutter-quest/flutter_quest
+        run: ls -la flutter-quest/flutter_quest/
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -38,6 +41,8 @@ jobs:
       - name: Get dependencies
         run: |
           cd flutter-quest/flutter_quest
+          pwd
+          ls -la
           flutter pub get
 
       - name: Run tests
