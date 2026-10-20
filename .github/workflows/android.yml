@@ -18,6 +18,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          path: flutter-quest/flutter_quest
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -45,12 +47,12 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: flutter-quest/flutter_quest/build/app/outputs/flutter-apk/app-release.apk
+          path: build/app/outputs/flutter-apk/app-release.apk
           retention-days: 30
 
       - name: Upload APK (all ABIs)
         uses: actions/upload-artifact@v4
         with:
           name: app-release-split
-          path: flutter-quest/flutter_quest/build/app/outputs/flutter-apk/
+          path: build/app/outputs/flutter-apk/
           retention-days: 30
