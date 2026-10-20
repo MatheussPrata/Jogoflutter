@@ -31,29 +31,29 @@ jobs:
 
       - name: Get dependencies
         run: |
-          cd flutter-quest/flutter_quest
+          cd flutter-quest
           flutter pub get
 
       - name: Run tests
         run: |
-          cd flutter-quest/flutter_quest
+          cd flutter-quest
           flutter test
 
       - name: Build Release APK
         run: |
-          cd flutter-quest/flutter_quest
+          cd flutter-quest
           flutter build apk --release
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: flutter-quest/flutter_quest/build/app/outputs/flutter-apk/app-release.apk
+          path: flutter-quest/build/app/outputs/flutter-apk/app-release.apk
           retention-days: 30
 
       - name: Upload APK (all ABIs)
         uses: actions/upload-artifact@v4
         with:
           name: app-release-split
-          path: flutter-quest/flutter_quest/build/app/outputs/flutter-apk/
+          path: flutter-quest/build/app/outputs/flutter-apk/
           retention-days: 30
