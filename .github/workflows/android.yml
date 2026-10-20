@@ -29,34 +29,29 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Check folder structure
+      - name: Setup, Get Dependencies and Build APK
         run: |
-          pwd
-          ls -la
-          find . -name "pubspec.yaml"
-
-      - name: Get dependencies
-        working-directory: ./flutter-quest
-        run: flutter pub get
-
-      - name: Run tests
-        working-directory: ./flutter-quest
-        run: flutter test
-
-      - name: Build Release APK
-        working-directory: ./flutter-quest
-        run: flutter build apk --release
+          # 1. Encontra o diretório exato que contém o pubspec.yaml
+          PROJECT_PATH=$(dirname $(find . -name "pubspec.yaml" | head -n 1))
+          echo "O pubspec.yaml foi encontrado na pasta: $PROJECT_PATH"
+          
+          # 2. Entra no diretório
+          cd "$PROJECT_PATH"
+          
+          # 3. Baixa as dependências e faz o build
+          flutter pub get
+          flutter build apk --release
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: flutter-quest/build/app/outputs/flutter-apk/app-release.apk
+          path: flutter_quest/build/app/outputs/flutter-apk/app-release.apk
           retention-days: 30
 
       - name: Upload APK (all ABIs)
         uses: actions/upload-artifact@v4
         with:
           name: app-release-split
-          path: flutter-quest/build/app/outputs/flutter-apk/
+          path: flutter_quest/build/app/outputs/flutter-apk/
           retention-days: 30
