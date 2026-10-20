@@ -1,4 +1,4 @@
-name: Build Android APK
+name: Build Android APK and Deploy Web
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [main, master]
 
 jobs:
-  build:
+  build-android:
     name: Build Release APK
     runs-on: ubuntu-latest
     timeout-minutes: 45
@@ -55,3 +55,44 @@ jobs:
           name: app-release-split
           path: flutter_quest/build/app/outputs/flutter-apk/
           retention-days: 30
+
+  deploy-web:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: build-android
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.7'
+          channel: 'stable'
+          cache: true
+
+      - name: Build Web
+        run: |
+          PROJECT_PATH=$(dirname $(find . -name "pubspec.yaml" | head -n 1))
+          echo "O pubspec.yaml foi encontrado na pasta: $PROJECT_PATH"
+          cd "$PROJECT_PATH"
+          flutter pub get
+          flutter build web --release
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: flutter_quest/build/web
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
