@@ -1,9 +1,14 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'content/exercise.dart';
 import 'content/lessons.dart';
+import 'models/user.dart';
+import 'providers/auth_provider.dart';
+import 'screens/login_screen.dart';
+import 'screens/register_screen.dart';
 
 void main() {
   runApp(const FlutterQuestApp());
@@ -14,378 +19,454 @@ class FlutterQuestApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Quest',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF6750A4)),
-        useMaterial3: true,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+      ],
+      child: MaterialApp(
+        title: 'Flutter Quest',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF6750A4)),
+          useMaterial3: true,
+        ),
+        home: const AuthWrapper(),
+        routes: {
+          '/login': (_) => const LoginScreen(),
+          '/register': (_) => const RegisterScreen(),
+          '/home': (_) => const HomeScreen(),
+        },
       ),
-      home: const LessonScreen(),
     );
   }
 }
 
-class LessonScreen extends StatefulWidget {
-  const LessonScreen({super.key});
+class AuthWrapper extends StatefulWidget {
+  const AuthWrapper({super.key});
 
   @override
-  State<LessonScreen> createState() => _LessonScreenState();
+  State<AuthWrapper> createState() => _AuthWrapperState();
 }
 
-class _LessonScreenState extends State<LessonScreen> {
-  final lesson = allLessons.first;
+class _AuthWrapperState extends State<AuthWrapper> {
+  @override
+  Widget build(BuildContext context) {
+    // Sempre abre na tela de login - não restaura sessão automaticamente
+    return const LoginScreen();
+  }
+}
 
-  int index = 0;
-  int? chosenOption;
-  List<String> chosenOrder = [];
-  late TextEditingController freeController;
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
-  /// Peças na ordem exibida (embaralhada). Recalculada ao trocar de exercício
-  /// para a mesma peça não cair sempre na mesma posição.
-  List<CodeBlock> shuffledBlocks = [];
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
 
-  ExerciseResult? result;
-  bool? correct;
-
-  Exercise get exercise => lesson.exercises[index];
+class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0;
+  late final PageController _pageController;
 
   @override
   void initState() {
     super.initState();
-    freeController = TextEditingController(text: exercise.template);
-    _shuffleBlocks();
-  }
-
-  /// Embaralha as peças. Usa semente baseada no exercício para não mudar
-  /// a cada rebuild, mas ser diferente entre exercícios.
-  void _shuffleBlocks() {
-    final blocks = List<CodeBlock>.from(exercise.blocks);
-    blocks.shuffle(math.Random(exercise.id * 7919 + index));
-    shuffledBlocks = blocks;
+    _pageController = PageController();
   }
 
   @override
   void dispose() {
-    freeController.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
-  void reset() {
+  void _onItemTapped(int index) {
     setState(() {
-      chosenOption = null;
-      chosenOrder = [];
-      result = null;
-      correct = null;
-      freeController.text = exercise.template;
-    });
-  }
-
-  void check() {
-    final r = checkExercise(
-      exercise,
-      chosenOption: chosenOption,
-      chosenOrder: chosenOrder,
-      freeText: freeController.text,
-    );
-
-    // Critério de acerto por tipo: a saída precisa ser coerente.
-    final bool ok;
-    switch (exercise.kind) {
-      case ExerciseKind.gap:
-        ok = chosenOption == exercise.correctOption;
-      case ExerciseKind.blocks:
-        ok = _listEquals(chosenOrder, exercise.correctOrder);
-      case ExerciseKind.free:
-        ok = r.ok && r.output.isNotEmpty;
-    }
-
-    setState(() {
-      result = r;
-      correct = ok;
-    });
-  }
-
-  bool _listEquals(List<String> a, List<String> b) {
-    if (a.length != b.length) return false;
-    for (var i = 0; i < a.length; i++) {
-      if (a[i] != b[i]) return false;
-    }
-    return true;
-  }
-
-  void next() {
-    if (index + 1 >= lesson.exercises.length) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Lição concluída! 🎉')),
+      _selectedIndex = index;
+      _pageController.animateToPage(
+        index,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
       );
-      return;
-    }
-    setState(() {
-      index++;
-      chosenOption = null;
-      chosenOrder = [];
-      result = null;
-      correct = null;
-      freeController.text = exercise.template;
-      _shuffleBlocks();
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(lesson.title),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(6),
-          child: LinearProgressIndicator(
-            value: (index + 1) / lesson.exercises.length,
-            minHeight: 6,
-          ),
-        ),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              'Exercício ${index + 1} de ${lesson.exercises.length}',
-              style: const TextStyle(fontSize: 12, color: Colors.grey),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              exercise.prompt,
-              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 16),
-            _buildBody(),
-            const SizedBox(height: 16),
-            if (correct != null) _feedbackBox(),
-            const SizedBox(height: 12),
-            _buildActions(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBody() {
-    switch (exercise.kind) {
-      case ExerciseKind.gap:
-        return _gapBody();
-      case ExerciseKind.blocks:
-        return _blocksBody();
-      case ExerciseKind.free:
-        return _freeBody();
-    }
-  }
-
-  // -- lacuna --------------------------------------------------------------
-
-  Widget _gapBody() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Container(
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            color: const Color(0xFF1E1E1E),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Text(
-            exercise.codeFor(chosenOption: chosenOption),
-            style: const TextStyle(
-              color: Colors.white,
-              fontFamily: 'monospace',
-              fontSize: 14,
-              height: 1.5,
-            ),
-          ),
-        ),
-        const SizedBox(height: 14),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            for (var i = 0; i < exercise.options.length; i++)
-              ChoiceChip(
-                label: Text(exercise.options[i]),
-                selected: chosenOption == i,
-                onSelected: (_) => setState(() {
-                  chosenOption = i;
-                  correct = null;
-                }),
-              ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  // -- blocos --------------------------------------------------------------
-
-  Widget _blocksBody() {
-    final available =
-        shuffledBlocks.where((b) => !chosenOrder.contains(b.id)).toList();
-    final byId = {for (final b in shuffledBlocks) b.id: b.label};
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        // área de montagem
-        Container(
-          constraints: const BoxConstraints(minHeight: 72),
-          width: double.infinity,
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: const Color(0xFF1E1E1E),
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.white24),
-          ),
-          child: chosenOrder.isEmpty
-              ? const Text(
-                  'Toque nas peças abaixo para montar o código',
-                  style: TextStyle(color: Colors.grey, fontSize: 12),
-                )
-              : Wrap(
-                  spacing: 6,
-                  runSpacing: 6,
-                  children: [
-                    for (final id in chosenOrder)
-                      ActionChip(
-                        label: Text(
-                          byId[id] ?? '',
-                          style: const TextStyle(
-                            fontFamily: 'monospace',
-                            color: Colors.white,
-                          ),
-                        ),
-                        backgroundColor: const Color(0xFF3A3A3A),
-                        onPressed: () => setState(() {
-                          chosenOrder.remove(id);
-                          correct = null;
-                        }),
-                      ),
-                  ],
-                ),
-        ),
-        const SizedBox(height: 14),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            for (final block in available)
-              ActionChip(
-                label: Text(
-                  block.label,
-                  style: const TextStyle(fontFamily: 'monospace'),
-                ),
-                onPressed: () => setState(() {
-                  chosenOrder.add(block.id);
-                  correct = null;
-                }),
-              ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  // -- livre ---------------------------------------------------------------
-
-  Widget _freeBody() {
-    return TextField(
-      controller: freeController,
-      maxLines: 10,
-      minLines: 6,
-      style: const TextStyle(fontFamily: 'monospace', fontSize: 14, height: 1.5),
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
-        contentPadding: EdgeInsets.all(12),
-      ),
-      onChanged: (_) => setState(() => correct = null),
-    );
-  }
-
-  // -- feedback ------------------------------------------------------------
-
-  Widget _feedbackBox() {
-    final ok = correct == true;
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: ok ? const Color(0xFFE8F5E9) : const Color(0xFFFFF3E0),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: (index) => setState(() => _selectedIndex = index),
         children: [
-          Row(
-            children: [
-              Icon(
-                ok ? Icons.check_circle : Icons.lightbulb_outline,
-                color: ok ? Colors.green : Colors.orange,
-                size: 20,
-              ),
-              const SizedBox(width: 6),
-              Text(
-                ok ? 'Certo!' : 'Quase!',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: ok ? Colors.green[800] : Colors.orange[900],
-                ),
-              ),
-            ],
+          _buildLessonsTab(),
+          _buildProgressTab(),
+          _buildProfileTab(),
+        ],
+      ),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: _onItemTapped,
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.menu_book_outlined),
+            selectedIcon: Icon(Icons.menu_book),
+            label: 'Lição',
           ),
-          const SizedBox(height: 6),
-          if (ok)
-            Text(exercise.explanation, style: const TextStyle(fontSize: 13))
-          else ...[
-            ...result!.messages.map(
-              (m) => Text(m, style: const TextStyle(fontSize: 12)),
-            ),
-            if (result!.output.isNotEmpty)
-              Text(
-                'Saída: ${result!.output.join(" / ")}',
-                style: const TextStyle(fontSize: 12, fontFamily: 'monospace'),
-              ),
-          ],
+          NavigationDestination(
+            icon: Icon(Icons.bar_chart_outlined),
+            selectedIcon: Icon(Icons.bar_chart),
+            label: 'Progresso',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.person_outline),
+            selectedIcon: Icon(Icons.person),
+            label: 'Perfil',
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildActions() {
-    final canCheck = switch (exercise.kind) {
-      ExerciseKind.gap => chosenOption != null,
-      ExerciseKind.blocks => chosenOrder.isNotEmpty,
-      ExerciseKind.free => true,
-    };
+  Widget _buildLessonsTab() {
+    return Consumer<AuthProvider>(
+      builder: (context, authProvider, child) {
+        final user = authProvider.currentUser;
+        final lesson = allLessons.first;
 
-    if (correct == true) {
-      return FilledButton(
-        onPressed: next,
-        child: Text(
-          index + 1 >= lesson.exercises.length ? 'Concluir' : 'Continuar',
-        ),
-      );
-    }
-
-    return Row(
-      children: [
-        if (correct == false)
-          OutlinedButton(
-            onPressed: reset,
-            child: const Text('Tentar de novo'),
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(lesson.title),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.logout),
+                onPressed: () async {
+                  await context.read<AuthProvider>().logout();
+                },
+                tooltip: 'Sair',
+              ),
+            ],
+            bottom: PreferredSize(
+              preferredSize: const Size.fromHeight(6),
+              child: LinearProgressIndicator(
+                value: 1 / allLessons.first.exercises.length,
+                minHeight: 6,
+              ),
+            ),
           ),
-        const Spacer(),
-        FilledButton(
-          onPressed: canCheck ? check : null,
-          child: const Text('Verificar'),
-        ),
-      ],
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  'Olá, ${user?.username ?? 'Desenvolvedor'}! 👋',
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF6750A4),
+                      ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Continue aprendendo Flutter!',
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: Colors.grey[600],
+                      ),
+                ),
+                const SizedBox(height: 24),
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Próxima Lição',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          allLessons.first.title,
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFF6750A4),
+                              ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          allLessons.first.concept,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        const SizedBox(height: 16),
+                        FilledButton.icon(
+                          onPressed: () => Navigator.pushNamed(context, '/lesson'),
+                          icon: const Icon(Icons.play_arrow),
+                          label: const Text('Começar Lição'),
+                          style: FilledButton.styleFrom(
+                            minimumSize: const Size(double.infinity, 48),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  'Todas as Lições',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                const SizedBox(height: 12),
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: allLessons.length,
+                  itemBuilder: (context, index) {
+                    final lesson = allLessons[index];
+                    return Card(
+                      margin: const EdgeInsets.only(bottom: 12),
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: const Color(0xFF6750A4),
+                          child: Text(
+                            '${index + 1}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        title: Text(lesson.title),
+                        subtitle: Text(lesson.concept),
+                        trailing: const Icon(Icons.chevron_right),
+                        onTap: () => Navigator.pushNamed(context, '/lesson'),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildProgressTab() {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Progresso'),
+      ),
+      body: Consumer<AuthProvider>(
+        builder: (context, authProvider, child) {
+          final user = authProvider.currentUser;
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      children: [
+                        const Icon(
+                          Icons.emoji_events,
+                          size: 64,
+                          color: Color(0xFF6750A4),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'XP Total',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                color: Colors.grey[600],
+                              ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          '${user?.xp ?? 0} XP',
+                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFF6750A4),
+                              ),
+                        ),
+                        const SizedBox(height: 24),
+                        LinearProgressIndicator(
+                          value: 0.3,
+                          minHeight: 12,
+                          borderRadius: BorderRadius.circular(6),
+                          backgroundColor: Colors.grey[200],
+                          valueColor: const AlwaysStoppedAnimation(Color(0xFF6750A4)),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          '30% até o próximo nível',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Colors.grey[600],
+                              ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  'Conquistas',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                const SizedBox(height: 12),
+                ..._buildAchievements(),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  List<Widget> _buildAchievements() {
+    final achievements = [
+      {'title': 'Primeiro Passo', 'desc': 'Complete sua primeira lição', 'icon': Icons.looks_one, 'unlocked': true},
+      {'title': 'Mestre das Variáveis', 'desc': 'Complete a lição de variáveis', 'icon': Icons.code, 'unlocked': false},
+      {'title': 'Decisões', 'desc': 'Aprenda if/else', 'icon': Icons.call_split, 'unlocked': false},
+      {'title': 'Widget Master', 'desc': 'Crie seu primeiro widget', 'icon': Icons.widgets, 'unlocked': false},
+      {'title': 'Layout Master', 'desc': 'Domine Row e Column', 'icon': Icons.view_module, 'unlocked': false},
+      {'title': 'Estado', 'desc': 'Use setState pela primeira vez', 'icon': Icons.refresh, 'unlocked': false},
+    ];
+
+    return achievements.map((a) {
+      return Card(
+        margin: const EdgeInsets.only(bottom: 8),
+        child: ListTile(
+          leading: CircleAvatar(
+            backgroundColor: a['unlocked'] as bool ? const Color(0xFF6750A4) : Colors.grey[300],
+            child: Icon(
+              a['icon'] as IconData,
+              color: a['unlocked'] as bool ? Colors.white : Colors.grey[600],
+            ),
+          ),
+          title: Text(
+            a['title'] as String,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: a['unlocked'] as bool ? Colors.black : Colors.grey[600],
+            ),
+          ),
+          subtitle: Text(a['desc'] as String),
+          trailing: Icon(
+            a['unlocked'] as bool ? Icons.lock_open : Icons.lock,
+            color: a['unlocked'] as bool ? Colors.green : Colors.grey[400],
+          ),
+        );
+    }).toList();
+  }
+
+  Widget _buildProfileTab() {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Perfil'),
+      ),
+      body: Consumer<AuthProvider>(
+        builder: (context, authProvider, child) {
+          final user = authProvider.currentUser;
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                const SizedBox(height: 24),
+                CircleAvatar(
+                  radius: 50,
+                  backgroundColor: const Color(0xFF6750A4),
+                  child: Text(
+                    user?.username?.substring(0, 1).toUpperCase() ?? 'D',
+                    style: const TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  user?.username ?? 'Desenvolvedor',
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  user?.email ?? 'email@exemplo.com',
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: Colors.grey[600],
+                      ),
+                ),
+                const SizedBox(height: 8),
+                Chip(
+                  label: Text('Membro desde ${user?.createdAt.toString().split(' ')[0] ?? '2024'}'),
+                  backgroundColor: const Color(0xFF6750A4).withOpacity(0.1),
+                  side: BorderSide.none,
+                ),
+                const SizedBox(height: 32),
+                Card(
+                  child: Column(
+                    children: [
+                      ListTile(
+                        leading: const Icon(Icons.school_outlined),
+                        title: const Text('Progresso das Lições'),
+                        trailing: Text(
+                          '1/${allLessons.length}',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFF6750A4),
+                              ),
+                        ),
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.stars_outlined),
+                        title: const Text('XP Total'),
+                        trailing: Text(
+                          '0 XP',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFF6750A4),
+                              ),
+                        ),
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.emoji_events_outlined),
+                        title: const Text('Conquistas Desbloqueadas'),
+                        trailing: Text(
+                          '0/6',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFF6750A4),
+                              ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 24),
+                OutlinedButton.icon(
+                  onPressed: () async {
+                    await context.read<AuthProvider>().logout();
+                  },
+                  icon: const Icon(Icons.logout),
+                  label: const Text('Sair'),
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size(double.infinity, 48),
+                    foregroundColor: Colors.red,
+                    side: const BorderSide(color: Colors.red),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
