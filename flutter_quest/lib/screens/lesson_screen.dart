@@ -317,7 +317,7 @@ class _LessonScreenState extends State<LessonScreen> {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   child: Text(
-                    block.text,
+                    block.label,
                     style: TextStyle(
                       fontFamily: 'monospace',
                       fontSize: 14,
@@ -380,7 +380,7 @@ class _LessonScreenState extends State<LessonScreen> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                block.text,
+                                block.label,
                                 style: const TextStyle(fontFamily: 'monospace', fontSize: 13),
                               ),
                               const SizedBox(width: 4),
@@ -418,7 +418,7 @@ class _LessonScreenState extends State<LessonScreen> {
         ),
       ),
       child: Text(
-        block.text,
+        block.label,
         style: TextStyle(
           fontFamily: 'monospace',
           fontSize: 14,
