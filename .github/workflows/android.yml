@@ -16,6 +16,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Debug - list root
+        run: ls -la
+
+      - name: Debug - list flutter-quest
+        run: ls -la flutter-quest/
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
