@@ -107,7 +107,18 @@ jobs:
           ls -la build/app/outputs/flutter-apk/ || echo "NO APK DIR"
           find . -name "*.apk" -not -path "*/.dart_tool/*" | head -20
 
+      - name: Normalize APK location
+        if: always()
+        run: |
+          mkdir -p build/app/outputs/flutter-apk
+          if [ ! -f build/app/outputs/flutter-apk/app-release.apk ]; then
+            found=$(find . -name "app-release.apk" -not -path "*/.dart_tool/*" | head -1)
+            if [ -n "$found" ]; then cp "$found" build/app/outputs/flutter-apk/app-release.apk; fi
+          fi
+          ls -la build/app/outputs/flutter-apk/
+
       - name: Upload Release APK
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: app-release-apk
