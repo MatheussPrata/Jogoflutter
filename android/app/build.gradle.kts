@@ -19,12 +19,8 @@ android {
     }
 
     signingConfigs {
-        create("debug") {
-            storeFile = file("../debug.keystore")
-            storePassword = "android"
-            keyAlias = "androiddebugkey"
-            keyPassword = "android"
-        }
+        // Debug signing config is auto-created by Flutter Gradle plugin
+        // Release builds use the debug config for simplicity (no separate release keystore)
     }
 
     defaultConfig {
