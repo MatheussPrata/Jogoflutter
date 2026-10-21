@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [main, master]
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   analyze-and-test:
     name: Analyze & Test
@@ -100,13 +105,6 @@ jobs:
     timeout-minutes: 30
     needs: build-android
     if: github.repository == 'MatheussPrata/Jogoflutter' && github.ref == 'refs/heads/master'
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout
