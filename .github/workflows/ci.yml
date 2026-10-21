@@ -24,6 +24,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Debug project root
+        run: |
+          echo "PWD: $(pwd)"
+          find . -name "pubspec.yaml" -not -path "*/build/*" | head -5
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -39,9 +44,6 @@ jobs:
 
       - name: Flutter version
         run: flutter --version
-
-      - name: Flutter doctor
-        run: flutter doctor -v
 
       - name: Get Dependencies
         run: flutter pub get
@@ -72,6 +74,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Debug project root
+        run: |
+          echo "PWD: $(pwd)"
+          find . -name "pubspec.yaml" -not -path "*/build/*" | head -5
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -86,24 +93,23 @@ jobs:
           cache: true
 
       - name: Get Dependencies
-        run: |
-          flutter pub get
-          flutter --version
+        run: flutter pub get
 
-      - name: Build APK (debug to see output)
-        run: |
-          flutter build apk --release --split-per-abi -v 2>&1 | tail -50
-          echo "=== BUILD COMPLETED ==="
-          find . -name "*.apk" -type f 2>/dev/null | head -20
-          ls -la build/app/outputs/flutter-apk/ 2>/dev/null || echo "APK directory not found at expected path"
+      - name: Build Release APK
+        run: flutter build apk --release
 
-      - name: Upload APKs
+      - name: Show build output
+        if: always()
+        run: |
+          ls -la build/app/outputs/flutter-apk/ || echo "NO APK DIR"
+          find . -name "*.apk" -not -path "*/.dart_tool/*" | head -20
+
+      - name: Upload Release APK
         uses: actions/upload-artifact@v4
         with:
-          name: app-release-apks
-          path: |
-            build/app/outputs/flutter-apk/*.apk
-            build/app/outputs/bundle/release/*.aab
+          name: app-release-apk
+          path: '**/build/app/outputs/flutter-apk/app-release.apk'
+          if-no-files-found: warn
           retention-days: 30
 
   deploy-web:
