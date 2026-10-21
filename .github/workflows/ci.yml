@@ -64,9 +64,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     needs: analyze-and-test
-    defaults:
-      run:
-        working-directory: .
 
     steps:
       - name: Checkout
@@ -86,21 +83,24 @@ jobs:
           cache: true
 
       - name: Get Dependencies
-        run: flutter pub get
-
-      - name: Build APK
-        run: flutter build apk --release --split-per-abi
-
-      - name: Find APKs
         run: |
-          find build -name "*.apk" -type f 2>/dev/null || echo "No APKs found"
-          ls -la build/app/outputs/flutter-apk/ 2>/dev/null || echo "Directory not found"
+          flutter pub get
+          flutter --version
 
-      - name: Upload APK (all ABIs)
+      - name: Build APK (debug to see output)
+        run: |
+          flutter build apk --release --split-per-abi -v 2>&1 | tail -50
+          echo "=== BUILD COMPLETED ==="
+          find . -name "*.apk" -type f 2>/dev/null | head -20
+          ls -la build/app/outputs/flutter-apk/ 2>/dev/null || echo "APK directory not found at expected path"
+
+      - name: Upload APKs
         uses: actions/upload-artifact@v4
         with:
-          name: app-release-split
-          path: build/app/outputs/flutter-apk/
+          name: app-release-apks
+          path: |
+            build/app/outputs/flutter-apk/*.apk
+            build/app/outputs/bundle/release/*.aab
           retention-days: 30
 
   deploy-web:
