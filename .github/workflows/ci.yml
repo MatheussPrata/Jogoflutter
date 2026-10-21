@@ -91,10 +91,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     needs: build-android
+    if: github.repository == 'MatheussPrata/Jogoflutter'
     permissions:
       contents: read
       pages: write
-      id-token: ***
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
