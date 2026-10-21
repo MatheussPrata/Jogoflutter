@@ -16,6 +16,9 @@ jobs:
     name: Analyze & Test
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: .
 
     steps:
       - name: Checkout
@@ -59,8 +62,11 @@ jobs:
   build-android:
     name: Build Release APK
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     needs: analyze-and-test
+    defaults:
+      run:
+        working-directory: .
 
     steps:
       - name: Checkout
@@ -83,14 +89,12 @@ jobs:
         run: flutter pub get
 
       - name: Build APK
-        run: flutter build apk --release
+        run: flutter build apk --release --split-per-abi
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-release
-          path: build/app/outputs/flutter-apk/app-release.apk
-          retention-days: 30
+      - name: Find APKs
+        run: |
+          find build -name "*.apk" -type f 2>/dev/null || echo "No APKs found"
+          ls -la build/app/outputs/flutter-apk/ 2>/dev/null || echo "Directory not found"
 
       - name: Upload APK (all ABIs)
         uses: actions/upload-artifact@v4
@@ -105,6 +109,9 @@ jobs:
     timeout-minutes: 30
     needs: build-android
     if: github.repository == 'MatheussPrata/Jogoflutter' && github.ref == 'refs/heads/master'
+    defaults:
+      run:
+        working-directory: .
 
     steps:
       - name: Checkout
