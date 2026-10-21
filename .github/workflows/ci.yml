@@ -11,9 +11,6 @@ jobs:
     name: Analyze & Test
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    defaults:
-      run:
-        working-directory: ./flutter_quest
 
     steps:
       - name: Checkout
@@ -28,15 +25,12 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.47.7'
+          flutter-version: '3.24.5'
           channel: 'stable'
           cache: true
 
       - name: Get Dependencies
         run: flutter pub get
-
-      - name: Generate Code
-        run: dart run build_runner build --delete-conflicting-outputs
 
       - name: Analyze Dart code
         run: flutter analyze
@@ -56,9 +50,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     needs: analyze-and-test
-    defaults:
-      run:
-        working-directory: ./flutter_quest
 
     steps:
       - name: Checkout
@@ -73,18 +64,15 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.47.7'
+          flutter-version: '3.24.5'
           channel: 'stable'
           cache: true
 
       - name: Get Dependencies
         run: flutter pub get
 
-      - name: Generate Code
-        run: dart run build_runner build --delete-conflicting-outputs
-
       - name: Build APK
-        run: flutter build apk --release --verbose
+        run: flutter build apk --release
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
@@ -112,9 +100,6 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    defaults:
-      run:
-        working-directory: ./flutter_quest
 
     steps:
       - name: Checkout
@@ -123,15 +108,12 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.47.7'
+          flutter-version: '3.24.5'
           channel: 'stable'
           cache: true
 
       - name: Get Dependencies
         run: flutter pub get
-
-      - name: Generate Code
-        run: dart run build_runner build --delete-conflicting-outputs
 
       - name: Build Web
         run: flutter build web --release --base-href="/Jogoflutter/"
