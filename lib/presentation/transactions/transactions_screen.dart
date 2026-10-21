@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/providers/transaction_provider.dart';
-import '../../domain/entities/transaction.dart';
 import '../widgets/add_transaction_sheet.dart';
 
 /// Lista completa de transações (tela dedicada, aberta pelo FAB).
