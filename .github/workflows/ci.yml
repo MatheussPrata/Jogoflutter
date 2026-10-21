@@ -18,7 +18,7 @@ jobs:
     timeout-minutes: 20
     defaults:
       run:
-        working-directory: flutter_quest
+        working-directory: .
 
     steps:
       - name: Checkout
@@ -66,7 +66,7 @@ jobs:
     needs: analyze-and-test
     defaults:
       run:
-        working-directory: flutter_quest
+        working-directory: .
 
     steps:
       - name: Checkout
@@ -114,7 +114,7 @@ jobs:
     if: github.repository == 'MatheussPrata/Jogoflutter' && github.ref == 'refs/heads/master'
     defaults:
       run:
-        working-directory: flutter_quest
+        working-directory: .
 
     steps:
       - name: Checkout
