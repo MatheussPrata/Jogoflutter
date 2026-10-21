@@ -95,3 +95,7 @@ coverage/
 !**/ios/**/default.mode2v3
 !**/ios/**/default.pbxuser
 !**/ios/**/default.perspectivev3
+
+# Backend runtime data
+backend/data/db.json
+backend/data/*.tmp

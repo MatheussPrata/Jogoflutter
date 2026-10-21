@@ -1,0 +1,16 @@
+name: flutter_quest_backend
+description: API backend em Dart (shelf) para o Flutter Quest - auth, lições e transações.
+publish_to: 'none'
+version: 1.0.0
+
+environment:
+  sdk: '>=3.4.0 <4.0.0'
+
+dependencies:
+  shelf: ^1.4.1
+  shelf_router: ^1.1.4
+  crypto: ^3.0.3
+
+dev_dependencies:
+  lints: ^4.0.0
+  test: ^1.25.2
