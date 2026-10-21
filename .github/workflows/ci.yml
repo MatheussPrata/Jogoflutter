@@ -25,6 +25,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
+          flutter-version: '3.24.5'
           channel: 'stable'
           cache: true
 
@@ -69,6 +70,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
+          flutter-version: '3.24.5'
           channel: 'stable'
           cache: true
 
@@ -97,7 +99,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     needs: build-android
-    if: github.repository == 'MatheussPrata/Jogoflutter'
+    if: github.repository == 'MatheussPrata/Jogoflutter' && github.ref == 'refs/heads/master'
     permissions:
       contents: read
       pages: write
@@ -113,6 +115,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
+          flutter-version: '3.24.5'
           channel: 'stable'
           cache: true
 
