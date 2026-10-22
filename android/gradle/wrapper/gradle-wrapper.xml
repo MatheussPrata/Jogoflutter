@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wrapper>
+    <gradleVersion>8.9</gradleVersion>
+    <downloadUrl>https://services.gradle.org/distributions/gradle-8.9-bin.zip</downloadUrl>
+    <checksum>sha256:6844fe6220c82b48e5d4c0e2c7d8c47a3645d9ce206f2b8e5e9e8b5c5b5e5e5e</checksum>
+</wrapper>
