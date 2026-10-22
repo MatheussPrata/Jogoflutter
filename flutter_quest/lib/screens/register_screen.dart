@@ -16,8 +16,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  final _inviteCodeController = TextEditingController();
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
+  bool _obscureInviteCode = true;
 
   @override
   void dispose() {
@@ -25,6 +27,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _usernameController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+    _inviteCodeController.dispose();
     super.dispose();
   }
 
@@ -37,6 +40,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       username: _usernameController.text.trim(),
       password: _passwordController.text,
       confirmPassword: _confirmPasswordController.text,
+      inviteCode: _inviteCodeController.text.trim(),
     );
 
     if (success && mounted) {
@@ -175,6 +179,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       }
                       return null;
                     },
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _inviteCodeController,
+                    decoration: InputDecoration(
+                      labelText: 'Código de convite (opcional)',
+                      prefixIcon: const Icon(Icons.card_giftcard_outlined),
+                      border: const OutlineInputBorder(),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscureInviteCode
+                              ? Icons.visibility_outlined
+                              : Icons.visibility_off_outlined,
+                        ),
+                        onPressed: () => setState(
+                          () => _obscureInviteCode = !_obscureInviteCode,
+                        ),
+                      ),
+                      helperText: 'Deixe em branco para conta normal',
+                    ),
+                    obscureText: _obscureInviteCode,
                   ),
                   const SizedBox(height: 24),
                   if (context.watch<AuthProvider>().error != null)

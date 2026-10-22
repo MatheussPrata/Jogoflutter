@@ -35,6 +35,7 @@ class AuthService {
     required String username,
     required String password,
     required String confirmPassword,
+    String? inviteCode,
   }) async {
     await initialize();
 
@@ -64,10 +65,15 @@ class AuthService {
       return AuthResult.error('Este nome de usuário já está em uso');
     }
 
+    // Verifica se o código de convite é válido para admin
+    const adminInviteCode = 'FLUTTER_ADMIN_2024';
+    final isAdmin = inviteCode == adminInviteCode;
+
     final newUser = User.create(
       email: email,
       username: username,
       password: password,
+      isAdmin: isAdmin,
     );
 
     users.add(newUser);

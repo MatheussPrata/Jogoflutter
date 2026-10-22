@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'content/lessons.dart';
+import 'middleware/admin_middleware.dart';
 import 'providers/auth_provider.dart';
 import 'screens/login_screen.dart';
 import 'screens/register_screen.dart';
@@ -129,11 +130,24 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context, authProvider, child) {
         final user = authProvider.currentUser;
         final lesson = allLessons.first;
+        final isAdmin = context.isAdmin;
 
         return Scaffold(
           appBar: AppBar(
             title: Text(lesson.title),
             actions: [
+              if (isAdmin) ...[
+                IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: () => _showLessonDialog(context),
+                  tooltip: 'Criar lição',
+                ),
+                IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () => _showLessonListDialog(context),
+                  tooltip: 'Gerenciar lições',
+                ),
+              ],
               IconButton(
                 icon: const Icon(Icons.logout),
                 onPressed: () async {
@@ -464,6 +478,157 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           );
         },
+      ),
+    );
+  }
+
+  // Admin: Dialog para criar nova lição
+  void _showLessonDialog(BuildContext context, {Lesson? existingLesson}) {
+    final isEditing = existingLesson != null;
+    final titleController = TextEditingController(text: existingLesson?.title ?? '');
+    final conceptController = TextEditingController(text: existingLesson?.concept ?? '');
+    final formKey = GlobalKey<FormState>();
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(isEditing ? 'Editar Lição' : 'Criar Nova Lição'),
+        content: SizedBox(
+          width: 400,
+          child: Form(
+            key: formKey,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                    controller: titleController,
+                    decoration: const InputDecoration(
+                      labelText: 'Título',
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (v) => v?.isEmpty ?? true ? 'Obrigatório' : null,
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: conceptController,
+                    decoration: const InputDecoration(
+                      labelText: 'Conceito',
+                      border: OutlineInputBorder(),
+                    ),
+                    maxLines: 3,
+                    validator: (v) => v?.isEmpty ?? true ? 'Obrigatório' : null,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancelar'),
+          ),
+          FilledButton(
+            onPressed: () {
+              if (!formKey.currentState!.validate()) return;
+              Navigator.pop(dialogContext);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(isEditing
+                      ? 'Lição atualizada (simulação)'
+                      : 'Lição criada (simulação)'),
+                  backgroundColor: const Color(0xFF6750A4),
+                ),
+              );
+              // TODO: Implementar persistência real
+            },
+            child: Text(isEditing ? 'Salvar' : 'Criar'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Admin: Dialog para listar e gerenciar lições
+  void _showLessonListDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Gerenciar Lições'),
+        content: SizedBox(
+          width: 400,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: allLessons.length,
+            itemBuilder: (_, index) {
+              final lesson = allLessons[index];
+              return ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: const Color(0xFF6750A4),
+                  child: Text('${index + 1}',
+                      style: const TextStyle(color: Colors.white)),
+                ),
+                title: Text(lesson.title),
+                subtitle: Text(lesson.concept),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.edit, color: Color(0xFF6750A4)),
+                      onPressed: () {
+                        Navigator.pop(dialogContext);
+                        _showLessonDialog(context, existingLesson: lesson);
+                      },
+                      tooltip: 'Editar',
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      onPressed: () => _confirmDeleteLesson(context, index),
+                      tooltip: 'Excluir',
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Fechar'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _confirmDeleteLesson(BuildContext context, int index) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Excluir Lição?'),
+        content: Text('Tem certeza que deseja excluir "${allLessons[index].title}"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancelar'),
+          ),
+          FilledButton(
+            onPressed: () {
+              Navigator.pop(dialogContext);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Lição excluída (simulação)'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+              // TODO: Implementar persistência real
+            },
+            style: FilledButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text('Excluir'),
+          ),
+        ],
       ),
     );
   }

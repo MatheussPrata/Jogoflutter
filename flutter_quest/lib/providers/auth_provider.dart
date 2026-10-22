@@ -26,6 +26,7 @@ class AuthProvider extends ChangeNotifier {
     required String username,
     required String password,
     required String confirmPassword,
+    String? inviteCode,
   }) async {
     _setLoading(true);
     _clearError();
@@ -35,6 +36,7 @@ class AuthProvider extends ChangeNotifier {
       username: username,
       password: password,
       confirmPassword: confirmPassword,
+      inviteCode: inviteCode,
     );
 
     if (result.success) {

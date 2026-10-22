@@ -8,6 +8,7 @@ class User {
   final String passwordHash;
   final DateTime createdAt;
   final int xp;
+  final bool isAdmin;
 
   User({
     required this.id,
@@ -16,12 +17,14 @@ class User {
     required this.passwordHash,
     required this.createdAt,
     this.xp = 0,
+    this.isAdmin = false,
   });
 
   factory User.create({
     required String email,
     required String username,
     required String password,
+    bool isAdmin = false,
   }) {
     final id = DateTime.now().millisecondsSinceEpoch.toString();
     final passwordHash = _hashPassword(password);
@@ -31,6 +34,7 @@ class User {
       username: username.trim(),
       passwordHash: passwordHash,
       createdAt: DateTime.now(),
+      isAdmin: isAdmin,
     );
   }
 
@@ -52,6 +56,8 @@ class User {
       'username': username,
       'passwordHash': passwordHash,
       'createdAt': createdAt.toIso8601String(),
+      'xp': xp,
+      'isAdmin': isAdmin,
     };
   }
 
@@ -62,6 +68,8 @@ class User {
       username: json['username'] as String,
       passwordHash: json['passwordHash'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String),
+      xp: json['xp'] as int? ?? 0,
+      isAdmin: json['isAdmin'] as bool? ?? false,
     );
   }
 }
