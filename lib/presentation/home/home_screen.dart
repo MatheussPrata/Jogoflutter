@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../core/providers/auth_provider.dart';
 import '../../core/providers/lesson_provider.dart';
 import '../../core/providers/transaction_provider.dart';
+import '../../domain/entities/lesson.dart';
 import '../../domain/entities/transaction.dart';
 import '../lesson/lesson_screen.dart';
 import '../transactions/transactions_screen.dart';
@@ -769,7 +770,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     radius: 50,
                     backgroundColor: Theme.of(context).colorScheme.primary,
                     child: Text(
-                      user?.username?.substring(0, 1).toUpperCase() ?? 'D',
+                      user?.username.substring(0, 1).toUpperCase() ?? 'D',
                       style: const TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.bold,

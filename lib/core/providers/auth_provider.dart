@@ -51,9 +51,9 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
     try {
       _currentUser = await _authRepository.register(
-        username,
-        email,
-        password,
+        username: username,
+        email: email,
+        password: password,
         inviteCode: inviteCode,
       );
       _isLoading = false;

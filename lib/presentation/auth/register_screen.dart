@@ -34,9 +34,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (!_formKey.currentState!.validate()) return;
     final authProvider = context.read<AuthProvider>();
     final success = await authProvider.register(
-      _usernameController.text.trim(),
-      _emailController.text.trim(),
-      _passwordController.text,
+      username: _usernameController.text.trim(),
+      email: _emailController.text.trim(),
+      password: _passwordController.text,
       inviteCode: _inviteCodeController.text.trim(),
     );
     if (success && mounted) {
