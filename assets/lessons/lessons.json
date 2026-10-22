@@ -1,0 +1,747 @@
+{
+  "lessons": [
+    {
+      "index": 0,
+      "title": "Variáveis e Tipos",
+      "concept": "Aprenda a declarar variáveis e entender os tipos básicos do Dart",
+      "exercises": [
+        {
+          "id": "l0e0",
+          "kind": "gap",
+          "prompt": "Complete a declaração da variável:",
+          "template": "var nome = ___;",
+          "options": [
+            "\"Olá\"",
+            "42",
+            "true",
+            "[]"
+          ],
+          "correctOption": 0,
+          "blocks": [],
+          "correctOrder": [],
+          "explanation": "Variáveis do tipo String usam aspas duplas."
+        },
+        {
+          "id": "l0e1",
+          "kind": "gap",
+          "prompt": "Qual o tipo inferido para `var idade = 25;`?",
+          "template": "var idade = 25; // Tipo: ___",
+          "options": [
+            "String",
+            "int",
+            "double",
+            "bool"
+          ],
+          "correctOption": 1,
+          "blocks": [],
+          "correctOrder": [],
+          "explanation": "Dart infere `int` para números inteiros sem ponto decimal."
+        },
+        {
+          "id": "l0e2",
+          "kind": "blocks",
+          "prompt": "Monte o código para declarar uma variável double:",
+          "template": "",
+          "options": [],
+          "correctOption": -1,
+          "blocks": [
+            {
+              "id": "b1",
+              "label": "var"
+            },
+            {
+              "id": "b2",
+              "label": "altura"
+            },
+            {
+              "id": "b3",
+              "label": "="
+            },
+            {
+              "id": "b4",
+              "label": "1.75"
+            },
+            {
+              "id": "b5",
+              "label": ";"
+            }
+          ],
+          "correctOrder": [
+            "b1",
+            "b2",
+            "b3",
+            "b4",
+            "b5"
+          ],
+          "explanation": "A ordem correta: tipo, nome, atribuição, valor, ponto-e-vírgula."
+        },
+        {
+          "id": "l0e3",
+          "kind": "free",
+          "prompt": "Declare uma variável `cidade` do tipo String com seu nome:",
+          "template": "// Escreva seu código aqui",
+          "options": [],
+          "correctOption": -1,
+          "blocks": [],
+          "correctOrder": [],
+          "explanation": "Exemplo: var cidade = \"São Paulo\";"
+        },
+        {
+          "id": "l0e4",
+          "kind": "gap",
+          "prompt": "O que imprime `print(3.14.runtimeType)`?",
+          "template": "print(3.14.runtimeType); // ___",
+          "options": [
+            "int",
+            "double",
+            "num",
+            "String"
+          ],
+          "correctOption": 1,
+          "blocks": [],
+          "correctOrder": [],
+          "explanation": "Números com ponto decimal são inferidos como `double`."
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "title": "Controle de Fluxo (if/else)",
+      "concept": "Tome decisões no código com condicionais",
+      "exercises": [
+        {
+          "id": "l1e0",
+          "kind": "gap",
+          "prompt": "Complete a estrutura if:",
+          "template": "if (idade >= 18) {\n  print(\"Maior\");\n} ___ {\n  print(\"Menor\");\n}",
+          "options": [
+            "else if",
+            "else",
+            "then",
+            "elseif"
+          ],
+          "correctOption": 1,
+          "blocks": [],
+          "correctOrder": [],
+          "explanation": "O `else` executa quando a condição do `if` é falsa."
+        },
+        {
+          "id": "l1e1",
+          "kind": "gap",
+          "prompt": "Operador de igualdade em Dart:",
+          "template": "if (a ___ b) { print(\"Iguais\"); }",
+          "options": [
+            "=",
+            "==",
+            "===",
+            "!="
+          ],
+          "correctOption": 1,
+          "blocks": [],
+          "correctOrder": [],
+          "explanation": "Use `==` para comparar valores. `=` é atribuição."
+        },
+        {
+          "id": "l1e2",
+          "kind": "blocks",
+          "prompt": "Monte um if/else que verifica se nota >= 7:",
+          "template": "",
+          "options": [],
+          "correctOption": -1,
+          "blocks": [
+            {
+              "id": "b1",
+              "label": "if"
+            },
+            {
+              "id": "b2",
+              "label": "(nota >= 7)"
+            },
+            {
+              "id": "b3",
+              "label": "{"
+            },
+            {
+              "id": "b4",
+              "label": "print(\"Aprovado\");"
+            },
+            {
+              "id": "b5",
+              "label": "}"
+            },
+            {
+              "id": "b6",
+              "label": "else"
+            },
+            {
+              "id": "b7",
+              "label": "{"
+            },
+            {
+              "id": "b8",
+              "label": "print(\"Reprovado\");"
+            },
+            {
+              "id": "b9",
+              "label": "}"
+            }
+          ],
+          "correctOrder": [
+            "b1",
+            "b2",
+            "b3",
+            "b4",
+            "b5",
+            "b6",
+            "b7",
+            "b8",
+            "b9"
+          ],
+          "explanation": "Estrutura completa: if (condição) { ... } else { ... }"
+        },
+        {
+          "id": "l1e3",
+          "kind": "free",
+          "prompt": "Escreva um if/else que imprima \"Par\" se número for par, \"Ímpar\" caso contrário:",
+          "template": "var numero = 4;\n// Seu código aqui",
+          "options": [],
+          "correctOption": -1,
+          "blocks": [],
+          "correctOrder": [],
+          "explanation": "Use `numero % 2 == 0` para verificar se é par."
+        },
+        {
+          "id": "l1e4",
+          "kind": "gap",
+          "prompt": "Qual palavra-chave encadeia múltiplas condições?",
+          "template": "if (a > b) {\n  print(\"A maior\");\n} ___ (a < b) {\n  print(\"B maior\");\n}",
+          "options": [
+            "else",
+            "else if",
+            "elif",
+            "elseif"
+          ],
+          "correctOption": 1,
+          "blocks": [],
+          "correctOrder": [],
+          "explanation": "`else if` permite verificar múltiplas condições em sequência."
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "title": "Widget Text",
+      "concept": "Exiba texto na tela com o widget Text",
+      "exercises": [
+        {
+          "id": "l2e0",
+          "kind": "gap",
+          "prompt": "Complete o widget Text:",
+          "template": "Text(___);",
+          "options": [
+            "\"Olá Mundo\"",
+            "Olá Mundo",
+            "'Olá Mundo'",
+            "Texto(\"Olá\")"
+          ],
+          "correctOption": 0,
+          "blocks": [],
+          "correctOrder": [],
+          "explanation": "Text recebe uma String. Use aspas duplas."
+        },
+        {
+          "id": "l2e1",
+          "kind": "gap",
+          "prompt": "Propriedade para definir tamanho da fonte:",
+          "template": "Text(\"Olá\", style: TextStyle(fontSize: ___));",
+          "options": [
+            "16",
+            "\"16\"",
+            "16.0",
+            "size: 16"
+          ],
+          "correctOption": 0,
+          "blocks": [],
+          "correctOrder": [],
+          "explanation": "fontSize aceita double. `16` é válido (int vira double)."
+        },
+        {
+          "id": "l2e2",
+          "kind": "blocks",
+          "prompt": "Monte um Text com cor azul e negrito:",
+          "template": "",
+          "options": [],
+          "correctOption": -1,
+          "blocks": [
+            {
+              "id": "b1",
+              "label": "Text("
+            },
+            {
+              "id": "b2",
+              "label": "\"Flutter\""
+            },
+            {
+              "id": "b3",
+              "label": ","
+            },
+            {
+              "id": "b4",
+              "label": "style:"
+            },
+            {
+              "id": "b5",
+              "label": "TextStyle("
+            },
+            {
+              "id": "b6",
+              "label": "color: Colors.blue,"
+            },
+            {
+              "id": "b7",
+              "label": "fontWeight: FontWeight.bold,"
+            },
+            {
+              "id": "b8",
+              "label": ")"
+            },
+            {
+              "id": "b9",
+              "label": ")"
+            }
+          ],
+          "correctOrder": [
+            "b1",
+            "b2",
+            "b3",
+            "b4",
+            "b5",
+            "b6",
+            "b7",
+            "b8",
+            "b9"
+          ],
+          "explanation": "TextStyle aceita múltiplas propriedades separadas por vírgula."
+        },
+        {
+          "id": "l2e3",
+          "kind": "free",
+          "prompt": "Crie um Text centralizado, vermelho, tamanho 24:",
+          "template": "// Seu código aqui",
+          "options": [],
+          "correctOption": -1,
+          "blocks": [],
+          "correctOrder": [],
+          "explanation": "Use textAlign: TextAlign.center, color: Colors.red, fontSize: 24"
+        },
+        {
+          "id": "l2e4",
+          "kind": "gap",
+          "prompt": "Como fazer texto itálico?",
+          "template": "Text(\"Olá\", style: TextStyle(fontStyle: ___));",
+          "options": [
+            "FontStyle.italic",
+            "FontStyle.normal",
+            "FontStyle.bold",
+            "italic"
+          ],
+          "correctOption": 0,
+          "blocks": [],
+          "correctOrder": [],
+          "explanation": "FontStyle.italic é o enum correto para itálico."
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "title": "Widget Container",
+      "concept": "Caixas personalizáveis com padding, margin, cor, borda",
+      "exercises": [
+        {
+          "id": "l3e0",
+          "kind": "gap",
+          "prompt": "Complete o Container com cor de fundo:",
+          "template": "Container(___);",
+          "options": [
+            "color: Colors.blue",
+            "color = Colors.blue",
+            "backgroundColor: Colors.blue",
+            "bg: Colors.blue"
+          ],
+          "correctOption": 0,
+          "blocks": [],
+          "correctOrder": [],
+          "explanation": "A propriedade é `color`, não `backgroundColor`."
+        },
+        {
+          "id": "l3e1",
+          "kind": "gap",
+          "prompt": "Propriedade para espaçamento interno:",
+          "template": "Container(padding: ___);",
+          "options": [
+            "EdgeInsets.all(16)",
+            "margin: 16",
+            "spacing: 16",
+            "inset: 16"
+          ],
+          "correctOption": 0,
+          "blocks": [],
+          "correctOrder": [],
+          "explanation": "Use `EdgeInsets.all()` para padding uniforme."
+        },
+        {
+          "id": "l3e2",
+          "kind": "blocks",
+          "prompt": "Monte Container com borda arredondada e sombra:",
+          "template": "",
+          "options": [],
+          "correctOption": -1,
+          "blocks": [
+            {
+              "id": "b1",
+              "label": "Container("
+            },
+            {
+              "id": "b2",
+              "label": "decoration:"
+            },
+            {
+              "id": "b3",
+              "label": "BoxDecoration("
+            },
+            {
+              "id": "b4",
+              "label": "color: Colors.white,"
+            },
+            {
+              "id": "b5",
+              "label": "borderRadius:"
+            },
+            {
+              "id": "b6",
+              "label": "BorderRadius.circular(12),"
+            },
+            {
+              "id": "b7",
+              "label": "boxShadow: ["
+            },
+            {
+              "id": "b8",
+              "label": "BoxShadow(blurRadius: 4)"
+            },
+            {
+              "id": "b9",
+              "label": "],"
+            },
+            {
+              "id": "b10",
+              "label": ")"
+            },
+            {
+              "id": "b11",
+              "label": ")"
+            }
+          ],
+          "correctOrder": [
+            "b1",
+            "b2",
+            "b3",
+            "b4",
+            "b5",
+            "b6",
+            "b7",
+            "b8",
+            "b9",
+            "b10",
+            "b11"
+          ],
+          "explanation": "BoxDecoration agrupa propriedades visuais: cor, borda, sombra, gradiente."
+        },
+        {
+          "id": "l3e3",
+          "kind": "free",
+          "prompt": "Crie Container 200x100, fundo verde, margem 20:",
+          "template": "// Seu código aqui",
+          "options": [],
+          "correctOption": -1,
+          "blocks": [],
+          "correctOrder": [],
+          "explanation": "width: 200, height: 100, color: Colors.green, margin: EdgeInsets.all(20)"
+        },
+        {
+          "id": "l3e4",
+          "kind": "gap",
+          "prompt": "Como centralizar filho no Container?",
+          "template": "Container(alignment: ___);",
+          "options": [
+            "Alignment.center",
+            "Align.center",
+            "Center()",
+            "center: true"
+          ],
+          "correctOption": 0,
+          "blocks": [],
+          "correctOrder": [],
+          "explanation": "Use `Alignment.center` (ou `Alignment.centerLeft`, etc)."
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "title": "Row, Column, Expanded",
+      "concept": "Layouts flexíveis para organizar widgets horizontal e verticalmente",
+      "exercises": [
+        {
+          "id": "l4e0",
+          "kind": "gap",
+          "prompt": "Widget para layout horizontal:",
+          "template": "___(\n  children: [Text(\"A\"), Text(\"B\")],\n)",
+          "options": [
+            "Row",
+            "Column",
+            "Stack",
+            "ListView"
+          ],
+          "correctOption": 0,
+          "blocks": [],
+          "correctOrder": [],
+          "explanation": "Row organiza filhos horizontalmente. Column = vertical."
+        },
+        {
+          "id": "l4e1",
+          "kind": "gap",
+          "prompt": "Como fazer filho ocupar espaço restante?",
+          "template": "Row(children: [\n  Text(\"Fixo\"),\n  ___(child: Text(\"Flexível\")),\n])",
+          "options": [
+            "Expanded",
+            "Flexible",
+            "Spacer",
+            "SizedBox"
+          ],
+          "correctOption": 0,
+          "blocks": [],
+          "correctOrder": [],
+          "explanation": "Expanded força o filho a preencher o espaço livre."
+        },
+        {
+          "id": "l4e2",
+          "kind": "blocks",
+          "prompt": "Monte Column com 3 textos espaçados:",
+          "template": "",
+          "options": [],
+          "correctOption": -1,
+          "blocks": [
+            {
+              "id": "b1",
+              "label": "Column("
+            },
+            {
+              "id": "b2",
+              "label": "mainAxisAlignment:"
+            },
+            {
+              "id": "b3",
+              "label": "MainAxisAlignment.spaceEvenly,"
+            },
+            {
+              "id": "b4",
+              "label": "children: ["
+            },
+            {
+              "id": "b5",
+              "label": "Text(\"1\"),"
+            },
+            {
+              "id": "b6",
+              "label": "Text(\"2\"),"
+            },
+            {
+              "id": "b7",
+              "label": "Text(\"3\"),"
+            },
+            {
+              "id": "b8",
+              "label": "],"
+            },
+            {
+              "id": "b9",
+              "label": ")"
+            }
+          ],
+          "correctOrder": [
+            "b1",
+            "b2",
+            "b3",
+            "b4",
+            "b5",
+            "b6",
+            "b7",
+            "b8",
+            "b9"
+          ],
+          "explanation": "mainAxisAlignment controla distribuição no eixo principal."
+        },
+        {
+          "id": "l4e3",
+          "kind": "free",
+          "prompt": "Crie Row com 2 containers: um fixo 100px, outro expansível:",
+          "template": "// Seu código aqui",
+          "options": [],
+          "correctOption": -1,
+          "blocks": [],
+          "correctOrder": [],
+          "explanation": "Row(children: [Container(width: 100), Expanded(child: Container())])"
+        },
+        {
+          "id": "l4e4",
+          "kind": "gap",
+          "prompt": "Alinhamento horizontal em Column:",
+          "template": "Column(crossAxisAlignment: ___);",
+          "options": [
+            "CrossAxisAlignment.center",
+            "MainAxisAlignment.center",
+            "Alignment.center",
+            "center: true"
+          ],
+          "correctOption": 0,
+          "blocks": [],
+          "correctOrder": [],
+          "explanation": "crossAxisAlignment alinha no eixo transversal (horizontal em Column)."
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "title": "StatefulWidget e setState",
+      "concept": "Crie widgets com estado mutável que reagem a interações",
+      "exercises": [
+        {
+          "id": "l5e0",
+          "kind": "gap",
+          "prompt": "Classe base para widget com estado:",
+          "template": "class Contador extends ___ { }",
+          "options": [
+            "StatefulWidget",
+            "StatelessWidget",
+            "State",
+            "Widget"
+          ],
+          "correctOption": 0,
+          "blocks": [],
+          "correctOrder": [],
+          "explanation": "StatefulWidget é imutável mas cria um State mutável."
+        },
+        {
+          "id": "l5e1",
+          "kind": "gap",
+          "prompt": "Método que cria o State:",
+          "template": "class Contador extends StatefulWidget {\n  @override\n  ___ createState() => _ContadorState();\n}",
+          "options": [
+            "State",
+            "Widget",
+            "State<Contador>",
+            "StatefulWidget"
+          ],
+          "correctOption": 2,
+          "blocks": [],
+          "correctOrder": [],
+          "explanation": "createState retorna State<Widget>."
+        },
+        {
+          "id": "l5e2",
+          "kind": "blocks",
+          "prompt": "Monte o estado com contador e setState:",
+          "template": "",
+          "options": [],
+          "correctOption": -1,
+          "blocks": [
+            {
+              "id": "b1",
+              "label": "class _ContadorState extends State<Contador> {"
+            },
+            {
+              "id": "b2",
+              "label": "int _count = 0;"
+            },
+            {
+              "id": "b3",
+              "label": "void _increment() {"
+            },
+            {
+              "id": "b4",
+              "label": "setState(() {"
+            },
+            {
+              "id": "b5",
+              "label": "_count++;"
+            },
+            {
+              "id": "b6",
+              "label": "});"
+            },
+            {
+              "id": "b7",
+              "label": "}"
+            },
+            {
+              "id": "b8",
+              "label": "@override"
+            },
+            {
+              "id": "b9",
+              "label": "Widget build(BuildContext context) {"
+            },
+            {
+              "id": "b10",
+              "label": "return Text(\"$_count\");"
+            },
+            "id": "b11",
+            "label": "}"
+          ],
+          "correctOrder": [
+            "b1",
+            "b2",
+            "b3",
+            "b4",
+            "b5",
+            "b6",
+            "b7",
+            "b8",
+            "b9",
+            "b10",
+            "b11",
+            "b12"
+          ],
+          "explanation": "setState notifica o framework para reconstruir o widget."
+        },
+        {
+          "id": "l5e3",
+          "kind": "free",
+          "prompt": "Crie botão que incrementa contador ao clicar:",
+          "template": "// Complete o build com ElevatedButton e onPressed",
+          "options": [],
+          "correctOption": -1,
+          "blocks": [],
+          "correctOrder": [],
+          "explanation": "ElevatedButton(onPressed: _increment, child: Text(\"+\"))"
+        },
+        {
+          "id": "l5e4",
+          "kind": "gap",
+          "prompt": "Quando NÃO usar setState:",
+          "template": "___",
+          "options": [
+            "No initState",
+            "No build",
+            "No dispose",
+            "Todas acima"
+          ],
+          "correctOption": 3,
+          "blocks": [],
+          "correctOrder": [],
+          "explanation": "setState em build/initState/dispose causa erros. Use apenas em callbacks/eventos."
+        }
+      ]
+    }
+  ]
+}
