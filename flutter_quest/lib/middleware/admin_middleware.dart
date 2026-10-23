@@ -1,11 +1,3 @@
-/// Middleware para verificar se o usuário atual é admin
-///
-/// Uso:
-/// ```dart
-/// if (!context.requireAdmin()) return;
-/// // código admin-only aqui
-/// ```
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';

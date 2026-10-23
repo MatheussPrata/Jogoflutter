@@ -9,6 +9,7 @@ void main() {
       final code = ex.codeFor(chosenOption: ex.correctOption);
       expect(code.contains('___'), isFalse);
       expect(code.contains('final preco = 8.50;'), isTrue);
+      expect(code, isNotEmpty);
     });
 
     test('código da lacuna roda de verdade', () {
@@ -40,13 +41,13 @@ void main() {
       final ex = licao1.exercises.firstWhere((e) => e.kind == ExerciseKind.blocks);
       final code = ex.codeFor(chosenOrder: ex.correctOrder);
       expect(code, 'final cafe = 8.50 ;');
+      expect(code.length, greaterThan(0));
     });
 
     test('soma montada com declarações roda e dá 20.5', () {
       final ex = licao1.exercises.firstWhere(
         (e) => e.kind == ExerciseKind.blocks && e.correctOrder.length > 10,
       );
-      final code = ex.codeFor(chosenOrder: ex.correctOrder);
       // Agora o exercício inclui as declarações de cafe e pao.
       final r = checkExercise(ex, chosenOrder: ex.correctOrder);
       expect(r.ok, isTrue, reason: r.messages.join(', '));
