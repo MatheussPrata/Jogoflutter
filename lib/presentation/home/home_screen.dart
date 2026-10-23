@@ -3,13 +3,8 @@ import 'package:provider/provider.dart';
 
 import '../../core/providers/auth_provider.dart';
 import '../../core/providers/lesson_provider.dart';
-import '../../core/providers/transaction_provider.dart';
 import '../../domain/entities/lesson.dart';
-import '../../domain/entities/transaction.dart';
 import '../lesson/lesson_screen.dart';
-import '../transactions/transactions_screen.dart';
-import '../widgets/add_transaction_fab.dart';
-import '../widgets/add_transaction_sheet.dart';
 import '../widgets/admin_context.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -54,15 +49,10 @@ class _HomeScreenState extends State<HomeScreen> {
         onPageChanged: (index) => setState(() => _selectedIndex = index),
         children: [
           _buildLessonsTab(),
-          _buildTransactionsTab(),
           _buildProgressTab(),
           _buildProfileTab(),
         ],
       ),
-      floatingActionButton: AddTransactionFab(
-        onPressed: () => showAddTransactionSheet(context),
-      ),
-      floatingActionButtonLocation: const _EllipseFabLocation(),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedIndex,
         onDestinationSelected: _onItemTapped,
@@ -71,11 +61,6 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.menu_book_outlined),
             selectedIcon: Icon(Icons.menu_book),
             label: 'Lição',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.receipt_long_outlined),
-            selectedIcon: Icon(Icons.receipt_long),
-            label: 'Transações',
           ),
           NavigationDestination(
             icon: Icon(Icons.bar_chart_outlined),
@@ -445,186 +430,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildTransactionsTab() {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Transações'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.open_in_new),
-            tooltip: 'Tela completa',
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute<void>(
-                builder: (_) => const TransactionsScreen(),
-              ),
-            ),
-          ),
-        ],
-      ),
-      body: Consumer<TransactionProvider>(
-        builder: (context, provider, child) {
-          if (provider.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          return RefreshIndicator(
-            onRefresh: provider.load,
-            child: ListView(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
-              physics: const AlwaysScrollableScrollPhysics(),
-              children: [
-                _buildBalanceCard(provider),
-                const SizedBox(height: 20),
-                Text(
-                  'Todos os itens',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium
-                      ?.copyWith(fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 12),
-                if (provider.isEmpty)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 32),
-                    child: Column(
-                      children: [
-                        Icon(Icons.receipt_long_outlined,
-                            size: 56, color: Colors.grey[400]),
-                        const SizedBox(height: 12),
-                        Text(
-                          'Nenhuma transação ainda',
-                          style: TextStyle(color: Colors.grey[600]),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'Use o botão + para começar.',
-                          style: TextStyle(color: Colors.grey[500]),
-                        ),
-                      ],
-                    ),
-                  )
-                else
-                  ...provider.transactions.map(_buildTransactionTile),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildBalanceCard(TransactionProvider provider) {
-    final scheme = Theme.of(context).colorScheme;
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Saldo',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleSmall
-                  ?.copyWith(color: Colors.grey[600]),
-            ),
-            const SizedBox(height: 6),
-            Text(
-              'R\$ ${provider.balance.toStringAsFixed(2)}',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: provider.balance >= 0 ? scheme.primary : Colors.red,
-                  ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: _buildMiniStat(
-                    label: 'Receitas',
-                    value: provider.totalIncome,
-                    color: Colors.green,
-                    icon: Icons.arrow_upward,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _buildMiniStat(
-                    label: 'Despesas',
-                    value: provider.totalExpense,
-                    color: Colors.red,
-                    icon: Icons.arrow_downward,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMiniStat({
-    required String label,
-    required double value,
-    required Color color,
-    required IconData icon,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(icon, size: 16, color: color),
-              const SizedBox(width: 4),
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: color,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 6),
-          Text(
-            'R\$ ${value.toStringAsFixed(2)}',
-            style: TextStyle(color: color, fontWeight: FontWeight.bold),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTransactionTile(Transaction t) {
-    final color = t.isIncome ? Colors.green : Colors.red;
-    final sign = t.isIncome ? '+' : '-';
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: color.withOpacity(0.15),
-          child: Icon(
-            t.isIncome ? Icons.arrow_upward : Icons.arrow_downward,
-            color: color,
-          ),
-        ),
-        title: Text(t.description, maxLines: 1, overflow: TextOverflow.ellipsis),
-        subtitle: Text(t.category, maxLines: 1, overflow: TextOverflow.ellipsis),
-        trailing: Text(
-          '$sign R\$ ${t.amount.toStringAsFixed(2)}',
-          style: TextStyle(color: color, fontWeight: FontWeight.bold),
-        ),
-      ),
-    );
-  }
 
   Widget _buildProgressTab() {
     return Scaffold(
@@ -889,24 +694,3 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-/// Posiciona o FAB no centro, levemente para fora da barra de navegação.
-class _EllipseFabLocation extends StandardFabLocation
-    with FabCenterOffsetX, FabFloatOffsetY {
-  const _EllipseFabLocation();
-
-  @override
-  double getOffsetY(
-    ScaffoldPrelayoutGeometry scaffoldGeometry,
-    double adjustment,
-  ) {
-    final fabHeight = scaffoldGeometry.floatingActionButtonSize.height;
-    final snackBarHeight = scaffoldGeometry.snackBarSize.height;
-    final contentBottom = scaffoldGeometry.scaffoldSize.height -
-        scaffoldGeometry.minInsets.bottom;
-    final fabY = contentBottom -
-        fabHeight / 2 -
-        kBottomNavigationBarHeight +
-        AddTransactionFab.verticalLift;
-    return fabY + (snackBarHeight > 0 ? -snackBarHeight : 0);
-  }
-}
