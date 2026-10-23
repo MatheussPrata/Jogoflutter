@@ -51,8 +51,13 @@ jobs:
       - name: Analyze Dart code
         run: flutter analyze lib
 
-      - name: Run Tests
-        run: flutter test --coverage
+      - name: Install xvfb for widget tests
+        run: |
+          sudo apt-get update && sudo apt-get install -y xvfb
+
+      - name: Run Tests with xvfb
+        run: |
+          xvfb-run --auto-servernum --server-args="-screen 0 1280x720x24" flutter test --coverage
 
       - name: Upload Coverage
         uses: actions/upload-artifact@v4
