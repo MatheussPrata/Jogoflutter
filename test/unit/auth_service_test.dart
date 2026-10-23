@@ -18,9 +18,9 @@ void main() {
   group('AuthService', () {
     test('register cria usuário com senha hasheada e salt', () async {
       final user = await authService.register(
-        'testuser',
-        'test@example.com',
-        'password123',
+        username: 'testuser',
+        email: 'test@example.com',
+        password: 'password123',
       );
 
       expect(user.username, 'testuser');
@@ -33,9 +33,9 @@ void main() {
 
     test('login funciona com credenciais corretas', () async {
       final created = await authService.register(
-        'testuser',
-        'test@example.com',
-        'password123',
+        username: 'testuser',
+        email: 'test@example.com',
+        password: 'password123',
       );
 
       final logged = await authService.login('test@example.com', 'password123');
@@ -45,7 +45,11 @@ void main() {
     });
 
     test('login retorna null para senha errada', () async {
-      await authService.register('testuser', 'test@example.com', 'password123');
+      await authService.register(
+        username: 'testuser',
+        email: 'test@example.com',
+        password: 'password123',
+      );
 
       final logged = await authService.login('test@example.com', 'errada');
 
@@ -53,7 +57,11 @@ void main() {
     });
 
     test('login retorna null para email inexistente', () async {
-      await authService.register('testuser', 'test@example.com', 'password123');
+      await authService.register(
+        username: 'testuser',
+        email: 'test@example.com',
+        password: 'password123',
+      );
 
       final logged = await authService.login('outro@example.com', 'password123');
 
@@ -62,9 +70,9 @@ void main() {
 
     test('saveSession/getSession persistem a sessão', () async {
       final user = await authService.register(
-        'testuser',
-        'test@example.com',
-        'password123',
+        username: 'testuser',
+        email: 'test@example.com',
+        password: 'password123',
       );
 
       await authService.saveSession(user);
@@ -76,9 +84,9 @@ void main() {
 
     test('logout limpa a sessão', () async {
       final user = await authService.register(
-        'testuser',
-        'test@example.com',
-        'password123',
+        username: 'testuser',
+        email: 'test@example.com',
+        password: 'password123',
       );
       await authService.saveSession(user);
 
