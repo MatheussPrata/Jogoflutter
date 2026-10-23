@@ -32,7 +32,12 @@ class _FakeAuthRepository implements AuthRepository {
   }
 
   @override
-  Future<User> register(String username, String email, String password) async {
+  Future<User> register({
+    required String username,
+    required String email,
+    required String password,
+    String? inviteCode,
+  }) async {
     final user = User(
       id: '2',
       username: username,
