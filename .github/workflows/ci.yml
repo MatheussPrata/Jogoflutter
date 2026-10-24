@@ -162,7 +162,11 @@ jobs:
         run: flutter pub get
 
       - name: Build Web
-        run: flutter build web --release --base-href="/Jogoflutter/" --verbose
+        run: |
+          flutter build web --release --base-href="/Jogoflutter/" --verbose
+          echo "Build completed, checking output..."
+          ls -la build/
+          ls -la build/web/ || echo "build/web does not exist"
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
