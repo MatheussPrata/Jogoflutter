@@ -192,17 +192,19 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         Text(
                           'Próxima Lição',
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           allLessons.first.title,
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: const Color(0xFF6750A4),
-                              ),
+                          style:
+                              Theme.of(context).textTheme.titleLarge?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: const Color(0xFF6750A4),
+                                  ),
                         ),
                         const SizedBox(height: 8),
                         Text(
@@ -211,7 +213,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         const SizedBox(height: 16),
                         FilledButton.icon(
-                          onPressed: () => Navigator.pushNamed(context, '/lesson'),
+                          onPressed: () =>
+                              Navigator.pushNamed(context, '/lesson'),
                           icon: const Icon(Icons.play_arrow),
                           label: const Text('Começar Lição'),
                           style: FilledButton.styleFrom(
@@ -291,14 +294,18 @@ class _HomeScreenState extends State<HomeScreen> {
                         const SizedBox(height: 16),
                         Text(
                           'XP Total',
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                color: Colors.grey[600],
-                              ),
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    color: Colors.grey[600],
+                                  ),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           '${user?.xp ?? 0} XP',
-                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineMedium
+                              ?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: const Color(0xFF6750A4),
                               ),
@@ -309,14 +316,16 @@ class _HomeScreenState extends State<HomeScreen> {
                           minHeight: 12,
                           borderRadius: BorderRadius.circular(6),
                           backgroundColor: Colors.grey[200],
-                          valueColor: const AlwaysStoppedAnimation(Color(0xFF6750A4)),
+                          valueColor:
+                              const AlwaysStoppedAnimation(Color(0xFF6750A4)),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           '30% até o próximo nível',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Colors.grey[600],
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: Colors.grey[600],
+                                  ),
                         ),
                       ],
                     ),
@@ -341,12 +350,42 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<Widget> _buildAchievements() {
     final achievements = [
-      {'title': 'Primeiro Passo', 'desc': 'Complete sua primeira lição', 'icon': Icons.looks_one, 'unlocked': true},
-      {'title': 'Mestre das Variáveis', 'desc': 'Complete a lição de variáveis', 'icon': Icons.code, 'unlocked': false},
-      {'title': 'Decisões', 'desc': 'Aprenda if/else', 'icon': Icons.call_split, 'unlocked': false},
-      {'title': 'Widget Master', 'desc': 'Crie seu primeiro widget', 'icon': Icons.widgets, 'unlocked': false},
-      {'title': 'Layout Master', 'desc': 'Domine Row e Column', 'icon': Icons.view_module, 'unlocked': false},
-      {'title': 'Estado', 'desc': 'Use setState pela primeira vez', 'icon': Icons.refresh, 'unlocked': false},
+      {
+        'title': 'Primeiro Passo',
+        'desc': 'Complete sua primeira lição',
+        'icon': Icons.looks_one,
+        'unlocked': true
+      },
+      {
+        'title': 'Mestre das Variáveis',
+        'desc': 'Complete a lição de variáveis',
+        'icon': Icons.code,
+        'unlocked': false
+      },
+      {
+        'title': 'Decisões',
+        'desc': 'Aprenda if/else',
+        'icon': Icons.call_split,
+        'unlocked': false
+      },
+      {
+        'title': 'Widget Master',
+        'desc': 'Crie seu primeiro widget',
+        'icon': Icons.widgets,
+        'unlocked': false
+      },
+      {
+        'title': 'Layout Master',
+        'desc': 'Domine Row e Column',
+        'icon': Icons.view_module,
+        'unlocked': false
+      },
+      {
+        'title': 'Estado',
+        'desc': 'Use setState pela primeira vez',
+        'icon': Icons.refresh,
+        'unlocked': false
+      },
     ];
 
     return achievements.map((a) {
@@ -354,25 +393,28 @@ class _HomeScreenState extends State<HomeScreen> {
         margin: const EdgeInsets.only(bottom: 8),
         child: ListTile(
           leading: CircleAvatar(
-            backgroundColor: a['unlocked'] as bool ? const Color(0xFF6750A4) : Colors.grey[300],
+            backgroundColor: a['unlocked'] as bool
+                ? const Color(0xFF6750A4)
+                : Colors.grey[300],
             child: Icon(
               a['icon'] as IconData,
-              color: a['unlocked'] as bool ? Colors.white : Colors.grey[600],
+              color: (a['unlocked'] as bool) ? Colors.white : Colors.grey[600],
             ),
           ),
           title: Text(
             a['title'] as String,
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: a['unlocked'] as bool ? Colors.black : Colors.grey[600],
+              color: (a['unlocked'] as bool) ? Colors.black : Colors.grey[600],
             ),
           ),
           subtitle: Text(a['desc'] as String),
           trailing: Icon(
-            a['unlocked'] as bool ? Icons.lock_open : Icons.lock,
-            color: a['unlocked'] as bool ? Colors.green : Colors.grey[400],
+            a['unlocked'] == true ? Icons.lock_open : Icons.lock,
+            color: a['unlocked'] == true ? Colors.green : Colors.grey[400]!,
           ),
-        );
+        ),
+      );
     }).toList();
   }
 
@@ -393,7 +435,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   radius: 50,
                   backgroundColor: const Color(0xFF6750A4),
                   child: Text(
-                    user?.username?.substring(0, 1).toUpperCase() ?? 'D',
+                    (user?.username ?? 'D').substring(0, 1).toUpperCase(),
                     style: const TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
@@ -417,8 +459,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 8),
                 Chip(
-                  label: Text('Membro desde ${user?.createdAt.toString().split(' ').first ?? '2024}'),
-                  backgroundColor: const Color(0xFF6750A4).withValues(alpha: 0.1),
+                  label: Text(
+                      "Membro desde \${user?.createdAt.toString().split(' ').first ?? '2024'}"),
+                  backgroundColor:
+                      const Color(0xFF6750A4).withValues(alpha: 0.1),
                   side: BorderSide.none,
                 ),
                 const SizedBox(height: 32),
@@ -430,10 +474,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         title: const Text('Progresso das Lições'),
                         trailing: Text(
                           '1/${allLessons.length}',
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: const Color(0xFF6750A4),
-                              ),
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: const Color(0xFF6750A4),
+                                  ),
                         ),
                       ),
                       ListTile(
@@ -441,10 +486,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         title: const Text('XP Total'),
                         trailing: Text(
                           '0 XP',
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: const Color(0xFF6750A4),
-                              ),
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: const Color(0xFF6750A4),
+                                  ),
                         ),
                       ),
                       ListTile(
@@ -452,10 +498,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         title: const Text('Conquistas Desbloqueadas'),
                         trailing: Text(
                           '0/6',
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: const Color(0xFF6750A4),
-                              ),
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: const Color(0xFF6750A4),
+                                  ),
                         ),
                       ),
                     ],
@@ -485,8 +532,10 @@ class _HomeScreenState extends State<HomeScreen> {
   // Admin: Dialog para criar nova lição
   void _showLessonDialog(BuildContext context, {Lesson? existingLesson}) {
     final isEditing = existingLesson != null;
-    final titleController = TextEditingController(text: existingLesson?.title ?? '');
-    final conceptController = TextEditingController(text: existingLesson?.concept ?? '');
+    final titleController =
+        TextEditingController(text: existingLesson?.title ?? '');
+    final conceptController =
+        TextEditingController(text: existingLesson?.concept ?? '');
     final formKey = GlobalKey<FormState>();
 
     showDialog(
@@ -608,7 +657,8 @@ class _HomeScreenState extends State<HomeScreen> {
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text('Excluir Lição?'),
-        content: Text('Tem certeza que deseja excluir "${allLessons[index].title}"?'),
+        content: Text(
+            'Tem certeza que deseja excluir "${allLessons[index].title}"?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),

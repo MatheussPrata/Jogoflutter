@@ -207,14 +207,14 @@ class _LessonScreenState extends State<LessonScreen> {
               ],
             ),
 
-            if (_correct == true && _exercise.explanation != null) ...[
+            if (_correct == true) ...[
               const SizedBox(height: 16),
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: Colors.green[50],
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.green[200] ?? Colors.green),
+                  border: Border.all(color: Colors.green[200]!),
                 ),
                 child: Row(
                   children: [
@@ -222,7 +222,7 @@ class _LessonScreenState extends State<LessonScreen> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        _exercise.explanation ?? '',
+                        _exercise.explanation,
                         style: TextStyle(color: Colors.green[700]),
                       ),
                     ),
@@ -331,10 +331,10 @@ class _LessonScreenState extends State<LessonScreen> {
             return Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: candidateData.isNotEmpty ? const Color(0xFF6750A4).withValues(alpha: 0.1) : Colors.grey[100]!,
+                color: candidateData.isNotEmpty ? const Color(0xFF6750A4).withValues(alpha: 0.1) : (Colors.grey[100] ?? Colors.grey),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: candidateData.isNotEmpty ? const Color(0xFF6750A4) : Colors.grey[300],
+                  color: candidateData.isNotEmpty ? const Color(0xFF6750A4) : (Colors.grey[300] ?? Colors.grey),
                 ),
               ),
               child: Column(
@@ -499,7 +499,7 @@ class _LessonScreenState extends State<LessonScreen> {
         decoration: BoxDecoration(
           color: Colors.red[50],
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.red[200]),
+          border: Border.all(color: Colors.red[200]!),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
