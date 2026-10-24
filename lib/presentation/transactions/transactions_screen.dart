@@ -77,7 +77,7 @@ class TransactionsScreen extends StatelessWidget {
                   margin: EdgeInsets.zero,
                   child: ListTile(
                     leading: CircleAvatar(
-                      backgroundColor: color.withOpacity(0.15),
+                      backgroundColor: color.withAlpha(38),
                       child: Icon(
                         t.isIncome ? Icons.arrow_upward : Icons.arrow_downward,
                         color: color,

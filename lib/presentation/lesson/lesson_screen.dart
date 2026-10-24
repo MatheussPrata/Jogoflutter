@@ -237,7 +237,7 @@ class _LessonScreenState extends State<LessonScreen> {
               label: Text(option, style: const TextStyle(fontFamily: 'monospace')),
               selected: isSelected,
               onSelected: (_) => setState(() => _chosenOption = idx),
-              selectedColor: Theme.of(context).colorScheme.primary.withOpacity( 0.2),
+              selectedColor: Theme.of(context).colorScheme.primary.withAlpha(51),
               checkmarkColor: Theme.of(context).colorScheme.primary,
               labelStyle: TextStyle(
                 color: isSelected ? Theme.of(context).colorScheme.primary : Colors.black,
@@ -270,7 +270,7 @@ class _LessonScreenState extends State<LessonScreen> {
             return Draggable<CodeBlock>(
               data: block,
               feedback: Material(
-                color: isUsed ? Colors.grey[300] : Theme.of(context).colorScheme.primary.withOpacity( 0.1),
+                color: isUsed ? Colors.grey[300] : Theme.of(context).colorScheme.primary.withAlpha(26),
                 elevation: 4,
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -299,7 +299,7 @@ class _LessonScreenState extends State<LessonScreen> {
             return Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: candidateData.isNotEmpty ? Theme.of(context).colorScheme.primary.withOpacity( 0.1) : Colors.grey[100],
+                color: candidateData.isNotEmpty ? Theme.of(context).colorScheme.primary.withAlpha(26) : Colors.grey[100],
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                   color: candidateData.isNotEmpty ? Theme.of(context).colorScheme.primary : Colors.grey[300]!,
@@ -331,7 +331,7 @@ class _LessonScreenState extends State<LessonScreen> {
                         return Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.primary.withOpacity( 0.1),
+                            color: Theme.of(context).colorScheme.primary.withAlpha(26),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Row(
@@ -369,7 +369,7 @@ class _LessonScreenState extends State<LessonScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: isUsed ? Colors.grey[200] : Theme.of(context).colorScheme.primary.withOpacity( 0.1),
+        color: isUsed ? Colors.grey[200] : Theme.of(context).colorScheme.primary.withAlpha(26),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: isUsed ? Colors.grey[400]! : Theme.of(context).colorScheme.primary,

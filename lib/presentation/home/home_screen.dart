@@ -603,7 +603,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(height: 8),
                     Chip(
                       label: const Text('Administrador'),
-                      backgroundColor: Colors.amber.withOpacity(0.2),
+                      backgroundColor: Colors.amber.withAlpha(51),
                       side: BorderSide.none,
                       labelStyle: const TextStyle(
                         color: Colors.amber,
@@ -619,7 +619,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     backgroundColor: Theme.of(context)
                         .colorScheme
                         .primary
-                        .withOpacity(0.1),
+                        .withAlpha(26),
                     side: BorderSide.none,
                   ),
                   const SizedBox(height: 32),

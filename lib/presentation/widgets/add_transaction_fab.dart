@@ -19,7 +19,7 @@ class AddTransactionFab extends StatelessWidget {
         color: scheme.primary,
         shape: const CircleBorder(),
         elevation: 8,
-        shadowColor: scheme.primary.withOpacity( 0.5),
+        shadowColor: scheme.primary.withAlpha(128),
         child: InkWell(
           customBorder: const CircleBorder(),
           onTap: onPressed,
